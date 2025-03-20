@@ -1,4 +1,5 @@
-FROM mysql:5.7
-ENV MYSQL_ROOT_PASSWORD=password
-ENV MYSQL_DATABASE=galactic_airlines
-COPY init.sql /docker-entrypoint-initdb.d/
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+
+# Copy the Nginx configuration file to the container
+COPY default.conf /etc/nginx/conf.d/
