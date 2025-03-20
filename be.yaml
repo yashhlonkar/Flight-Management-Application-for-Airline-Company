@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        environment: galacticairlines  # Additional label to match Fargate profile
+    spec:
+      containers:
+        - name: backend
+          image: alamshkh/galactic-airlines-backend:k4
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DATABASE_HOST
+              value: "database-service"
+            - name: DATABASE_USER
+              value: "root"
+            - name: DATABASE_PASSWORD
+              value: "password"
+            - name: DATABASE_NAME
+              value: "galactic_airlines"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
